@@ -2,9 +2,18 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.service.PessoaService;
+import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controlador REST para gerenciar operações relacionadas à entidade Pessoa.
@@ -65,4 +74,24 @@ public class PessoaController {
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
     }
+
+
+    @GetMapping("/nome")
+    public List<Pessoa> buscarPorNome(@RequestParam("valor") String nome) {
+        return service.buscarPorNome(nome);
+    }
+
+    @GetMapping("/idade")
+    public List<Pessoa> buscarPorIdade(@RequestParam("valor") Integer idade) {
+        return service.buscarPorIdade(idade);
+    }
+    
+    @GetMapping("/pagina")
+    public Map<String, Object> listarPessoasPaginado(
+        @RequestParam(defaultValue = "1") int numero,
+        @RequestParam(defaultValue = "10") int tamanho) {
+    Map<String, Object> resultadoPaginado = service.listarPessoasPaginado(numero, tamanho);
+    
+    return resultadoPaginado;
+}
 }
