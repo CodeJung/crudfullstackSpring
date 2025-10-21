@@ -32,6 +32,35 @@ public class PessoaController {
         return service.listarTodas();
     }
 
+    @GetMapping("/nome")
+    public List<Pessoa> buscarPorNome(@RequestParam("valor") String valor) {
+        if (valor == null  valor.trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parâmetro 'valor' é obrigatório");
+        }
+        return service.buscarPorNome(valor);
+    }
+
+    @GetMapping("/idade")
+    public List<Pessoa> buscarPorIdade(@RequestParam("valor") Integer valor) {
+        if (valor == null  valor < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parâmetro 'valor' deve ser um inteiro não negativo");
+        }
+        return service.buscarPorIdade(valor);
+    }
+
+    @GetMapping("/pagina")
+    public Page<Pessoa> listarPaginado(@RequestParam("numero") Integer numero,
+                                       @RequestParam("tamanho") Integer tamanho) {
+        if (numero == null  numero < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parâmetro 'numero' deve ser >= 1");
+        }
+        if (tamanho == null  tamanho < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parâmetro 'tamanho' deve ser >= 1");
+        }
+        return service.listarPaginado(numero - 1, tamanho);
+    }
+
+
     /**
      * Cria uma nova pessoa.
      * Método acessível via POST em /pessoas

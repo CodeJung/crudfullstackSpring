@@ -2,6 +2,9 @@ package com.exemplo.crudmongo.service;
 
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.PessoaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,19 @@ public class PessoaService {
      */
     public List<Pessoa> listarTodas() {
         return repository.findAll();
+    }
+
+    public List<Pessoa> buscarPorNome(String nome) {
+        return repository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public List<Pessoa> buscarPorIdade(int idade) {
+        return repository.findByIdade(idade);
+    }
+
+    public Page<Pessoa> listarPaginado(int numero, int tamanho) {
+        Pageable pageable = PageRequest.of(numero, tamanho);
+        return repository.findAll(pageable);
     }
 
     /**
