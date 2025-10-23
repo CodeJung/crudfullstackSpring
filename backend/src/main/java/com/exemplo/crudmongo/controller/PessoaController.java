@@ -65,4 +65,9 @@ public class PessoaController {
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
     }
+
+    @GetMapping("/nome")
+    public List<Pessoa> buscarPessoaPorNome(@RequestParam("valor") String pessoaNome) {
+        return service.buscarPessoaPorNome(pessoaNome);
+    }
 }

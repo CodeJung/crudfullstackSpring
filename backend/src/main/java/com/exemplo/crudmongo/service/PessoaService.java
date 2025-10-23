@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Serviço responsável pela lógica de negócio relacionada à entidade Pessoa.
@@ -61,5 +62,17 @@ public class PessoaService {
      */
     public void excluir(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<Pessoa> buscarPessoaPorNome(String pessoaNome) {
+        List<Pessoa> pessoasEncontradasPeloNome = repository.findAll().stream().filter(
+                pessoa -> pessoa.getNome().toUpperCase().contains(pessoaNome.toUpperCase()))
+                .collect(Collectors.toList());
+
+        if (pessoasEncontradasPeloNome.isEmpty()) {
+            throw new RuntimeException("Pessoas com nome de " + pessoaNome + " não foram encontradas.");
+        }
+
+        return pessoasEncontradasPeloNome;
     }
 }
