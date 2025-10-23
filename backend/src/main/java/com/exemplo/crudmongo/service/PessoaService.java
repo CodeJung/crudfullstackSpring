@@ -75,4 +75,17 @@ public class PessoaService {
 
         return pessoasEncontradasPeloNome;
     }
+
+    public List<Pessoa> buscarPessoaPorIdade(int pessoaIdade) {
+        List<Pessoa> pessoasEncontradasPelaIdade = repository.findAll()
+                .stream()
+                .filter(p -> p.getIdade() == pessoaIdade)
+                .collect(Collectors.toList());
+
+        if (pessoasEncontradasPelaIdade.isEmpty()) {
+            throw new RuntimeException("Pessoas com idades iguais a " + pessoaIdade + "não foram encontradas");
+        }
+
+        return pessoasEncontradasPelaIdade;
+    }
 }

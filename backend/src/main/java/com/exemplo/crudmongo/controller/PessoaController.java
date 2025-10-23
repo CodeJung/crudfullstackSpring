@@ -67,7 +67,12 @@ public class PessoaController {
     }
 
     @GetMapping("/nome")
-    public List<Pessoa> buscarPessoaPorNome(@RequestParam("valor") String pessoaNome) {
+    public List<Pessoa> buscarPessoasPorNome(@RequestParam("valor") String pessoaNome) {
         return service.buscarPessoaPorNome(pessoaNome);
+    }
+
+    @GetMapping("/idade")
+    public List<Pessoa> buscarPessoasPorIdade(@RequestParam("valor") int pessoaIdade) {
+        return service.buscarPessoaPorIdade(pessoaIdade);
     }
 }
