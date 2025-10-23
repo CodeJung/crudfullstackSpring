@@ -3,6 +3,9 @@ package com.exemplo.crudmongo.service;
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.PessoaRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -87,5 +90,10 @@ public class PessoaService {
         }
 
         return pessoasEncontradasPelaIdade;
+    }
+
+    public Page<Pessoa> paginarResultados(Pageable pageable) {
+
+        return repository.findAll(pageable);
     }
 }
