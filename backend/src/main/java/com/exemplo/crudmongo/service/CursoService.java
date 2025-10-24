@@ -42,7 +42,7 @@ public class CursoService {
     public List<Curso> listarCursosPorNome(String nome) {
         List<Curso> cursosEncontradosPeloNome = repository.findAll()
                 .stream()
-                .filter(c -> c.getNome().toUpperCase().equals(nome.toUpperCase()))
+                .filter(c -> c.getNome().toUpperCase().contains(nome.toUpperCase()))
                 .collect(Collectors.toList());
 
         if (cursosEncontradosPeloNome.isEmpty()) {
