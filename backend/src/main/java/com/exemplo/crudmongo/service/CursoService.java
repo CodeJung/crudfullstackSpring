@@ -3,6 +3,8 @@ package com.exemplo.crudmongo.service;
 import com.exemplo.crudmongo.Model.Curso;
 import com.exemplo.crudmongo.repository.CursoRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -76,5 +78,9 @@ public class CursoService {
         }
 
         return cursosEncontradosPorAtivo;
+    }
+
+    public Page<Curso> paginarResultados(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }
