@@ -34,10 +34,30 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Dependência para integração com MongoDB -->
+        <!-- REMOVER ESSE CÓDIGO 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency> -->
+
+        <!-- ADICIONAR A DEPENDÊNCIA DO JPA E DO H2 -->
+           <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+        
+        
+        <!-- Iniciar com dados Fakes -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
         </dependency>
 
         <!-- Lombok para geração automática de código (getters/setters, etc) -->
