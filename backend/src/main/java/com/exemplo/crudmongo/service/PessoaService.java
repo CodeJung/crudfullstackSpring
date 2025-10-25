@@ -3,17 +3,18 @@ package com.exemplo.crudmongo.service;
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.PessoaRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-
 /**
  * Serviço responsável pela lógica de negócio relacionada à entidade Pessoa.
  */
 @Service // Indica que esta classe é um serviço do Spring
 public class PessoaService {
-
     private final PessoaRepository repository; // Repositório para acesso ao banco de dados
     
     /**
@@ -22,14 +23,37 @@ public class PessoaService {
     public PessoaService(PessoaRepository repository) {
         this.repository = repository;
     }
-
-
     /**
      * Retorna todas as pessoas cadastradas no banco de dados.
      * @return Lista de pessoas
      */
     public List<Pessoa> listarTodas() {
         return repository.findAll();
+    }
+
+    /**
+     * Busca pessoas cujo nome contenha o valor fornecido (ignora maiúsculas/minúsculas).
+     */
+    public List<Pessoa> buscarPorNome(String valor) {
+        return repository.findByNomeContainingIgnoreCase(valor);
+    }
+
+    /**
+     * Busca pessoas pela idade exata.
+     */
+    public List<Pessoa> buscarPorIdade(int idade) {
+        return repository.findByIdade(idade);
+    }
+
+    /**
+     * Retorna uma página de pessoas. `pagina` é zero-based.
+     */
+   public Page<Pessoa> buscarPagina(int pagina, int tamanho) {
+        if (pagina <= 0 || tamanho <= 0) {
+            throw new IllegalArgumentException("Parâmetro 'numero' inválido: deve ser >= 1 (1 = primeira página).");
+        }
+        Pageable pageable = PageRequest.of(pagina - 1, tamanho);
+        return repository.findAll(pageable);
     }
 
     /**
@@ -40,7 +64,6 @@ public class PessoaService {
     public Pessoa salvar(Pessoa pessoa) {
         return repository.save(pessoa);
     }
-
     /**
      * Atualiza uma pessoa existente pelo ID.
      * @param id Identificador da pessoa a ser atualizada
@@ -54,7 +77,6 @@ public class PessoaService {
             return repository.save(p);
         }).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
     }
-
     /**
      * Exclui uma pessoa pelo ID.
      * @param id Identificador da pessoa a ser excluída

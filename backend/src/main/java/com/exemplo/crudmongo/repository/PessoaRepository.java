@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
+	// Busca por nome contendo (case-insensitive)
+	java.util.List<Pessoa> findByNomeContainingIgnoreCase(String nome);
+
+	// Busca por idade exata
+	java.util.List<Pessoa> findByIdade(int idade);
 }
-
-
