@@ -26,17 +26,6 @@ public class CursoController {
         return service.listarTodosCursos();
     }
 
-    @PostMapping
-    public Curso criar(@RequestBody Curso curso) {
-        return service.salvarCurso(curso);
-    }
-
-    @PutMapping("/{id}")
-    public Curso atualizar(@PathVariable Long id,
-    @RequestBody Curso curso) {
-        return service.atualizarCurso(id, curso);
-    }
-
     @GetMapping("/nome")
     public List<Curso> listarCursosPorNome(@RequestParam("valor") String nome) {
         return service.listarCursosPorNome(nome);
