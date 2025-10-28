@@ -2,6 +2,7 @@ package com.exemplo.crudmongo.config;
 
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.Model.Curso;
+import com.exemplo.crudmongo.Model.Role;
 import com.exemplo.crudmongo.repository.CursoRepository;
 import com.exemplo.crudmongo.repository.PessoaRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +23,12 @@ public class DataLoader {
 
                 for (int i = 0; i < 200; i++) {
                     Pessoa pessoa = new Pessoa();
+                    if (i == 1) {
+                        pessoa.setRole(Role.valueOf("COORDENADOR"));
+                    }
                     pessoa.setNome(faker.name().fullName());
+                    pessoa.setPassword(faker.random().hex());
+                    pessoa.setEmail(faker.internet().emailAddress());
                     pessoa.setIdade(faker.number().numberBetween(18, 70));
                     pessoaRepository.save(pessoa);
                 }
