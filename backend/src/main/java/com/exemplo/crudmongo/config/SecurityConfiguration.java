@@ -1,5 +1,7 @@
 package com.exemplo.crudmongo.config;
 
+import com.exemplo.crudmongo.component.SecurityFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,12 +21,9 @@ import static com.exemplo.crudmongo.Model.Role.COORDENADOR;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-//
-//     private final SecurityFIlter securityFilter;
-//
-//     public SecurityConfig(SecurityFilter securityFilter) {
-//         this.securityFilter = securityFilter;
-//     }
+
+    @Autowired
+    SecurityFilter securityFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -38,7 +37,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/api/cursos").hasRole("COORDENADOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/cursos").hasRole("COORDENADOR")
                         .anyRequest().authenticated()
-                ).build();
+                )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+
     }
 
     @Bean
