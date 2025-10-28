@@ -21,6 +21,22 @@ public class CursoController {
         this.service = service;
     }
 
+    @PostMapping
+    public Curso criar(@RequestBody Curso curso) {
+        return service.salvarCurso(curso);
+    }
+
+    @PutMapping("/{id}")
+    public Curso atualizar(@PathVariable Long id,
+                           @RequestBody Curso curso) {
+        return service.atualizarCurso(id, curso);
+    }
+
+    @DeleteMapping("/{id}")
+    public void excluir(@PathVariable Long id) {
+        service.excluirCurso(id);
+    }
+
     @GetMapping
     public List<Curso> listar() {
         return service.listarTodosCursos();
