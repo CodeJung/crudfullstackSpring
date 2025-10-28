@@ -2,6 +2,7 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Curso;
 import com.exemplo.crudmongo.service.CursoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +16,8 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class CursoController {
 
-    private final CursoService service;
-
-    public CursoController(CursoService service) {
-        this.service = service;
-    }
+    @Autowired
+    private CursoService service;
 
     @PostMapping
     public Curso criar(@RequestBody Curso curso) {
