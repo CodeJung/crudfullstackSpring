@@ -1,17 +1,13 @@
 package com.exemplo.crudmongo.Model;
 //import org.springframework.data.annotation.Id;
 //import org.springframework.data.mongodb.core.mapping.Document;   Remover esse código
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
-
+import java.util.Set;
 
 @Entity  // Anotação JPA para indicar que esta classe é uma entidade
 @Table(name = "pessoas") // Define o nome da tabela no banco de dados
@@ -22,11 +18,20 @@ public class Pessoa implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Geração automática do ID
     private Long id ;
     private String nome;
+    private String email;
+    private String password;
     private int idade;
+
     private Role role;
 
     public Pessoa() {
-    }// Construtor padrão pois é necessário para o JPA e MongoDB funcionar corretamente 
+    }// Construtor padrão pois é necessário para o JPA e MongoDB funcionar corretamente
+
+    public Pessoa(String email, String encryptedPassword, Role role) {
+        this.email = email;
+        this.password = encryptedPassword;
+        this.role = role;
+    }
 
     // Getter para o campo id
     public Long getId() {
@@ -54,38 +59,59 @@ public class Pessoa implements UserDetails {
         this.nome = nome;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
+        if(this.role == Role.COORDENADOR) return Set.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_ALUNO"));
+        else return Set.of(new SimpleGrantedAuthority("ROLE_ALUNO"));
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return nome;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
