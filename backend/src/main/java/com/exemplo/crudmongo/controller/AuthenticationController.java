@@ -1,9 +1,11 @@
 package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.DTOS.AuthenticationDTO;
+import com.exemplo.crudmongo.DTOS.LoginResponseDTO;
 import com.exemplo.crudmongo.DTOS.RegisterDTO;
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.PessoaRepository;
+import com.exemplo.crudmongo.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,16 @@ public class AuthenticationController {
     @Autowired
     private PessoaRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
+        var token = tokenService.generateToken((Pessoa) auth.getPrincipal());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
