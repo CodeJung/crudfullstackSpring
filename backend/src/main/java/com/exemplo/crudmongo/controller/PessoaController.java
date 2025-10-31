@@ -80,6 +80,11 @@ public class PessoaController {
         return service.buscarPessoaPorIdade(pessoaIdade);
     }
 
+    @GetMapping("/cursos")
+    public List<Pessoa> buscarPessoasPorCurso(@RequestParam("valor") String nome) {
+        return service.listarPessoasPorNomeDeCurso(nome);
+    }
+
     @GetMapping("/pagina")
     public ResponseEntity<Page<Pessoa>> paginarResultados(@RequestParam(name = "numero") int pagina, @RequestParam(name = "tamanho") int tamanho) {
         if (pagina < 1) {

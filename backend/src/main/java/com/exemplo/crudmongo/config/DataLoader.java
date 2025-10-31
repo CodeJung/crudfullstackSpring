@@ -23,21 +23,18 @@ public class DataLoader {
 
                 for (int i = 0; i < 200; i++) {
                     Pessoa pessoa = new Pessoa();
-                    if (i == 1) {
-                        pessoa.setRole(Role.valueOf("COORDENADOR"));
-                    }
+
                     pessoa.setNome(faker.name().fullName());
                     pessoa.setPassword(faker.random().hex());
                     pessoa.setEmail(faker.internet().emailAddress());
                     pessoa.setIdade(faker.number().numberBetween(18, 70));
                     pessoaRepository.save(pessoa);
-                }
 
-                for (int i = 0; i < 200; i++) {
                     Curso curso = new Curso();
                     curso.setNome(faker.educator().course());
                     curso.setCargaHoraria(faker.number().randomDouble(0, 0, 100));
                     curso.setAtivo(faker.random().nextBoolean());
+                    curso.setPessoa(pessoa);
                     cursoRepository.save(curso);
                 }
 
