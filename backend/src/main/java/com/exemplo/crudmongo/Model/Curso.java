@@ -1,10 +1,7 @@
 package com.exemplo.crudmongo.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "cursos")
@@ -16,6 +13,10 @@ public class Curso {
     private String nome;
     private double cargaHoraria;
     private boolean ativo;
+
+    @ManyToOne
+    @JoinColumn(name = "pessoas_id")
+    Pessoa pessoa;
 
     public Curso() {
     }
@@ -50,5 +51,13 @@ public class Curso {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
     }
 }

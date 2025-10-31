@@ -1,6 +1,7 @@
 package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Curso;
+import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,8 +42,8 @@ public class CursoController {
     }
 
     @GetMapping("/nome")
-    public List<Curso> listarCursosPorNome(@RequestParam("valor") String nome) {
-        return service.listarCursosPorNome(nome);
+    public List<Pessoa> listarCursosPorNome(@RequestParam("valor") String nome) {
+        return service.listarPessoasPorNomeDeCurso(nome);
     }
 
     @GetMapping("/carga-horaria")

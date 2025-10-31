@@ -1,6 +1,7 @@
 package com.exemplo.crudmongo.service;
 
 import com.exemplo.crudmongo.Model.Curso;
+import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.CursoRepository;
 
 import org.springframework.data.domain.Page;
@@ -41,11 +42,12 @@ public class CursoService {
         repository.deleteById(id);
     }
 
-    public List<Curso> listarCursosPorNome(String nome) {
-        List<Curso> cursosEncontradosPeloNome = repository.findAll()
+    public List<Pessoa> listarPessoasPorNomeDeCurso(String nome) {
+        List<Pessoa> cursosEncontradosPeloNome = repository.findAll()
                 .stream()
                 .filter(c -> c.getNome().toUpperCase().contains(nome.toUpperCase()))
-                .collect(Collectors.toList());
+                .map(c -> c.getPessoa())
+                .toList();
 
         if (cursosEncontradosPeloNome.isEmpty()) {
             throw new RuntimeException("Nenhum curso foi encontrado com o nome de " + nome);
