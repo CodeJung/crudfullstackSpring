@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,7 +107,8 @@ public class PessoaController {
             throw new IllegalArgumentException("O tamanho da página não pode ser menor que 1");
         }
 
-        Pageable pageable = PageRequest.of(pagina - 1, tamanho);
+        Sort sort = Sort.by("nome").ascending();
+        Pageable pageable = PageRequest.of(pagina - 1, tamanho, sort);
         Page pagePessoa = service.paginarResultados(pageable);
 
         return ResponseEntity.ok(pagePessoa);
