@@ -91,7 +91,7 @@ public class PessoaService {
         return pessoasEncontradasPelaIdade;
     }
 
-    public List<Pessoa> listarPessoasPorNomeDeCurso(String nome) {
+    public List<Pessoa> buscarPessoasPorNomeDeCurso(String nome) {
         List<Pessoa> cursosEncontradosPeloNome = cursoRepository.findAll()
                 .stream()
                 .filter(c -> c.getNome().toUpperCase().contains(nome.toUpperCase()))
@@ -103,6 +103,23 @@ public class PessoaService {
         }
 
         return cursosEncontradosPeloNome;
+    }
+
+    public List<Pessoa> buscarPessoasPorNomeIdadeCurso(String nome, String curso, int idadeMin, int idadeMax) {
+        List<Pessoa> pessoasEncontradasPorNomeIdadeCurso = cursoRepository.findAll().
+                stream()
+                .filter(c -> c.getNome().toUpperCase().contains(curso.toUpperCase()))
+                .filter(c -> c.getPessoa().getNome().toUpperCase().contains(nome.toUpperCase()))
+                .filter(c -> c.getPessoa().getIdade() >= idadeMin)
+                .filter(c -> c.getPessoa().getIdade() <= idadeMax)
+                .map(c -> c.getPessoa())
+                .toList();
+
+        if (pessoasEncontradasPorNomeIdadeCurso.isEmpty()) {
+            throw new RuntimeException("Nenhum pessoa foi encontrada baseada nesses critérios.");
+        }
+
+        return pessoasEncontradasPorNomeIdadeCurso;
     }
 
     public Page<Pessoa> paginarResultados(Pageable pageable) {

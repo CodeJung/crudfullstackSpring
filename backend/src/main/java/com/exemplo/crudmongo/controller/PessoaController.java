@@ -2,6 +2,7 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.service.PessoaService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,7 +83,17 @@ public class PessoaController {
 
     @GetMapping("/cursos")
     public List<Pessoa> buscarPessoasPorCurso(@RequestParam("valor") String nome) {
-        return service.listarPessoasPorNomeDeCurso(nome);
+        return service.buscarPessoasPorNomeDeCurso(nome);
+    }
+
+    @GetMapping("/pesquisa")
+    public List<Pessoa> buscarPessoasPorNomeIdadeCurso(
+            @RequestParam(name = "nome") @Valid String nome,
+            @RequestParam(name = "curso") @Valid String curso,
+            @RequestParam(name = "idadeMin") @Valid int idadeMin,
+            @RequestParam(name = "idadeMax") @Valid int idadeMax
+    ) {
+        return service.buscarPessoasPorNomeIdadeCurso(nome, curso, idadeMin, idadeMax);
     }
 
     @GetMapping("/pagina")
