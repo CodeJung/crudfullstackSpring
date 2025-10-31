@@ -34,11 +34,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- REMOVER ESSE CÓDIGO 
+        <!-- ADICIONEI O SPRING SECURITY PARA CONSEGUIR USAR AS ANOTAÇÕES DE @PREAUTHORIZED NO CONTROLLER -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency> -->
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
         <!-- ADICIONAR A DEPENDÊNCIA DO JPA E DO H2 -->
            <dependency>

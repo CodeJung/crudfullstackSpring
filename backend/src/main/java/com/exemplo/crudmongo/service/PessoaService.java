@@ -72,7 +72,6 @@ public class PessoaService {
     }
 
     public List<Pessoa> buscarPorNome(String nome) {
-        // [CrudFullStack] Implementar Validação de Parâmetros de Busca Inválidos
         if (nome == null || nome.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "O nome para busca não pode ser vazio.");

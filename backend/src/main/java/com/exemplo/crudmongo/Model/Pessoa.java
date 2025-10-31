@@ -1,16 +1,10 @@
 package com.exemplo.crudmongo.Model;
 //import org.springframework.data.annotation.Id;
-//import org.springframework.data.mongodb.core.mapping.Document;   Remover esse código
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 @Entity  // Anotação JPA para indicar que esta classe é uma entidade
 @Table(name = "pessoas") // Define o nome da tabela no banco de dados
-// @Document(collection = "pessoa")   Remover esse código
 public class Pessoa {
 
     @Id // Indica que este campo é o identificador único do documento
@@ -18,6 +12,10 @@ public class Pessoa {
     private Long id ;
     private String nome;
     private int idade;
+
+    //Aqui onde eu referi ao papel do usuário
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public Pessoa() {
     }// Construtor padrão pois é necessário para o JPA e MongoDB funcionar corretamente 
