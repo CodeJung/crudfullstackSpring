@@ -1,5 +1,7 @@
 package com.exemplo.crudmongo.service;
 
+import com.exemplo.crudmongo.DTOS.RelatorioDTO;
+import com.exemplo.crudmongo.Model.Curso;
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.repository.CursoRepository;
 import com.exemplo.crudmongo.repository.PessoaRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -67,8 +70,9 @@ public class PessoaService {
     }
 
     public List<Pessoa> buscarPessoaPorNome(String pessoaNome) {
-        List<Pessoa> pessoasEncontradasPeloNome = pessoaRepository.findAll().stream().filter(
-                pessoa -> pessoa.getNome().toUpperCase().contains(pessoaNome.toUpperCase()))
+        List<Pessoa> pessoasEncontradasPeloNome = pessoaRepository.findAll()
+                .stream()
+                .filter(pessoa -> pessoa.getNome().toUpperCase().contains(pessoaNome.toUpperCase()))
                 .collect(Collectors.toList());
 
         if (pessoasEncontradasPeloNome.isEmpty()) {
@@ -85,17 +89,18 @@ public class PessoaService {
                 .collect(Collectors.toList());
 
         if (pessoasEncontradasPelaIdade.isEmpty()) {
-            throw new RuntimeException("Pessoas com idades iguais a " + pessoaIdade + "não foram encontradas");
+            throw new RuntimeException("Pessoas com idades iguais a " + pessoaIdade + " não foram encontradas");
         }
 
         return pessoasEncontradasPelaIdade;
     }
 
     public List<Pessoa> buscarPessoasPorNomeDeCurso(String nome) {
-        List<Pessoa> cursosEncontradosPeloNome = cursoRepository.findAll()
+        List<Pessoa> cursosEncontradosPeloNome = pessoaRepository.findAll()
                 .stream()
-                .filter(c -> c.getNome().toUpperCase().contains(nome.toUpperCase()))
-                .map(c -> c.getPessoa())
+                .filter(c -> c.getCurso()
+                    .stream()
+                    .anyMatch(nomeCurso -> nomeCurso.getNome().toUpperCase().contains(nome.toUpperCase())))
                 .toList();
 
         if (cursosEncontradosPeloNome.isEmpty()) {
@@ -106,20 +111,71 @@ public class PessoaService {
     }
 
     public List<Pessoa> buscarPessoasPorNomeIdadeCurso(String nome, String curso, int idadeMin, int idadeMax) {
-        List<Pessoa> pessoasEncontradasPorNomeIdadeCurso = cursoRepository.findAll().
+        List<Pessoa> pessoasEncontradasPorNomeIdadeCurso = pessoaRepository.findAll().
                 stream()
-                .filter(c -> c.getNome().toUpperCase().contains(curso.toUpperCase()))
-                .filter(c -> c.getPessoa().getNome().toUpperCase().contains(nome.toUpperCase()))
-                .filter(c -> c.getPessoa().getIdade() >= idadeMin)
-                .filter(c -> c.getPessoa().getIdade() <= idadeMax)
-                .map(c -> c.getPessoa())
+                .filter(p -> p.getCurso().stream().anyMatch(c -> c.getNome().toUpperCase().contains(curso.toUpperCase())))
+                .filter(p -> p.getNome().toUpperCase().contains(nome.toUpperCase()))
+                .filter(p -> p.getIdade() >= idadeMin)
+                .filter(p -> p.getIdade() <= idadeMax)
                 .toList();
 
         if (pessoasEncontradasPorNomeIdadeCurso.isEmpty()) {
-            throw new RuntimeException("Nenhum pessoa foi encontrada baseada nesses critérios.");
+            throw new RuntimeException("Nenhuma pessoa foi encontrada baseado nesses critérios.");
         }
 
         return pessoasEncontradasPorNomeIdadeCurso;
+    }
+
+    public int totalPessoas() {
+        List<Pessoa> total = pessoaRepository.findAll();
+
+        if (total.isEmpty()) {
+            throw new RuntimeException("Nenhuma pessoa foi encontrada");
+        }
+
+        return total.size();
+    }
+
+    public double mediaIdade() {
+        int idadesSomadas = 0;
+        List<Pessoa> total = pessoaRepository.findAll();
+
+        if (total.isEmpty()) {
+            throw new RuntimeException("Nenhuma pessoa foi encontrada");
+        }
+
+        for (Pessoa pessoa : total) {
+            idadesSomadas += pessoa.getIdade();
+        }
+
+        double media = idadesSomadas / totalPessoas();
+
+        return media;
+    }
+
+    public int totalPorCurso() {
+        List<Curso> totalCurso = cursoRepository.findAll()
+                .stream()
+                .toList();
+
+        if (totalCurso.isEmpty()) {
+            throw new RuntimeException("Nenhuma pessoa foi achada com relação a algum curso.");
+        }
+
+        return totalCurso.size();
+    }
+
+    public RelatorioDTO relatorio() {
+        List<RelatorioDTO> relatorioDTOList = pessoaRepository.findAll()
+                .stream()
+                .map(p -> new RelatorioDTO(totalPessoas(), totalPorCurso(), mediaIdade()))
+                .toList();
+
+        if (relatorioDTOList.isEmpty()) {
+            throw new RuntimeException("Erro em gerar relatório, nenhuma pessoa foi encontrada.");
+        }
+
+        return relatorioDTOList.get(0);
     }
 
     public Page<Pessoa> paginarResultados(Pageable pageable) {
