@@ -21,21 +21,21 @@ public class DataLoader {
             if (pessoaRepository.count() == 0) {
                 Faker faker = new Faker(new Locale("pt-BR"));
 
-                for (int i = 0; i < 200; i++) {
+                for (int i = 0; i < 20; i++) {
                     Pessoa pessoa = new Pessoa();
-
                     pessoa.setNome(faker.name().fullName());
                     pessoa.setPassword(faker.random().hex());
                     pessoa.setEmail(faker.internet().emailAddress());
                     pessoa.setIdade(faker.number().numberBetween(18, 70));
+                    for (int j = 0; j < 5; j++) {
+                        Curso curso = new Curso();
+                        curso.setNome(faker.educator().course());
+                        curso.setCargaHoraria(faker.number().randomDouble(0, 0, 100));
+                        curso.setAtivo(faker.random().nextBoolean());
+                        cursoRepository.save(curso);
+                        pessoa.getCurso().add(curso);
+                    }
                     pessoaRepository.save(pessoa);
-
-                    Curso curso = new Curso();
-                    curso.setNome(faker.educator().course());
-                    curso.setCargaHoraria(faker.number().randomDouble(0, 0, 100));
-                    curso.setAtivo(faker.random().nextBoolean());
-                    curso.setPessoa(pessoa);
-                    cursoRepository.save(curso);
                 }
 
                 System.out.println("✅ Banco populado com 200 registros!");
