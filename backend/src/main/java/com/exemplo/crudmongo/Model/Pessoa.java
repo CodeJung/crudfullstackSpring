@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity  // Anotação JPA para indicar que esta classe é uma entidade
@@ -23,6 +24,12 @@ public class Pessoa implements UserDetails {
     private int idade;
 
     private Role role;
+
+    @ManyToMany
+    @JoinTable(name = "aluno_curso",
+    joinColumns = @JoinColumn(name = "aluno_id"),
+    inverseJoinColumns = @JoinColumn(name = "curso_id"))
+    Set<Curso> curso = new HashSet<>();
 
     public Pessoa() {
     }// Construtor padrão pois é necessário para o JPA e MongoDB funcionar corretamente
@@ -79,6 +86,14 @@ public class Pessoa implements UserDetails {
         this.email = email;
     }
 
+    public Set<Curso> getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Set<Curso> curso) {
+        this.curso = curso;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(this.role == Role.COORDENADOR) return Set.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_ALUNO"));
@@ -92,7 +107,7 @@ public class Pessoa implements UserDetails {
 
     @Override
     public String getUsername() {
-        return nome;
+        return email;
     }
 
     @Override

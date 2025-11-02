@@ -14,10 +14,6 @@ public class Curso {
     private double cargaHoraria;
     private boolean ativo;
 
-    @ManyToOne
-    @JoinColumn(name = "pessoas_id")
-    Pessoa pessoa;
-
     public Curso() {
     }
 
@@ -53,11 +49,4 @@ public class Curso {
         this.ativo = ativo;
     }
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
 }
