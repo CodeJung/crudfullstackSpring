@@ -1,5 +1,6 @@
 package com.exemplo.crudmongo.controller;
 
+import com.exemplo.crudmongo.DTOS.RelatorioDTO;
 import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.service.PessoaService;
 import jakarta.validation.Valid;
@@ -95,6 +96,11 @@ public class PessoaController {
             @RequestParam(name = "idadeMax") @Valid int idadeMax
     ) {
         return service.buscarPessoasPorNomeIdadeCurso(nome, curso, idadeMin, idadeMax);
+    }
+
+    @GetMapping("/relatorio")
+    public RelatorioDTO relatorio() {
+        return service.relatorio();
     }
 
     @GetMapping("/pagina")
