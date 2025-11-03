@@ -1,5 +1,6 @@
 services:
   # Backend - Spring Boot
+  #configuracao
   app:
     build:
       context: ./backend
