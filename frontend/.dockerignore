@@ -1,5 +1,6 @@
 node_modules
-dist
 .git
+*.lnk
+*.tmp
+*.DS_Store
 *.log
-*.ps1
