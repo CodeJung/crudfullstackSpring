@@ -23,8 +23,7 @@ public class Pessoa implements UserDetails {
     private Long id ;
     private String nome;
     private int idade;
-    private Role role;
-
+   
     public Pessoa() {
     }// Construtor padrão pois é necessário para o JPA e MongoDB funcionar corretamente 
 
