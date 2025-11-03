@@ -2,43 +2,49 @@ package com.exemplo.crudmongo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true) 
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/cursos/**").authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated() 
             )
-            .httpBasic(Customizer.withDefaults());
+            .httpBasic(); 
+
         return http.build();
     }
 
-    // Usuários em memória apenas para teste
     @Bean
-    public UserDetailsService userDetailsService() {
-        var userAluno = User.withUsername("aluno")
-                .password("{noop}burro12") // {noop} = sem criptografia
-                .roles("ALUNO")
-                .build();
-
-        var userCoord = User.withUsername("coordenador")
-                .password("{noop}burro34")
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+        UserDetails coordenador = User.withUsername("coordenador")
+                .password(encoder.encode("burro12"))
                 .roles("COORDENADOR")
                 .build();
 
-        return new InMemoryUserDetailsManager(userAluno, userCoord);
+        UserDetails aluno = User.withUsername("aluno")
+                .password(encoder.encode("burro34"))
+                .roles("ALUNO")
+                .build();
+
+        return new InMemoryUserDetailsManager(coordenador, aluno);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
