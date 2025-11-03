@@ -3,6 +3,7 @@ package com.exemplo.crudmongo.service;
 import com.exemplo.crudmongo.DTOS.RelatorioDTO;
 import com.exemplo.crudmongo.Model.Curso;
 import com.exemplo.crudmongo.Model.Pessoa;
+import com.exemplo.crudmongo.exception.exceptions.UserNotFound;
 import com.exemplo.crudmongo.repository.CursoRepository;
 import com.exemplo.crudmongo.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,19 @@ public class PessoaService {
      * @return Pessoa atualizada
      */
     public Pessoa atualizar(@PathVariable Long id,  Pessoa novaPessoa) {
+        if (id == 0) {
+            throw new UserNotFound("Usário não encontrado. ID do usuário não pode ser igual a zero.");
+        }
+
+        if (id < 0) {
+            throw new UserNotFound("Usuário não encontrado. ID do usuário não pode ser negativo.");
+        }
+
         return pessoaRepository.findById(id).map(p -> {
             p.setNome(novaPessoa.getNome());
             p.setIdade(novaPessoa.getIdade());
             return pessoaRepository.save(p);
-        }).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+        }).orElseThrow(() -> new UserNotFound("Pessoa não encontrada"));
     }
 
     /**
@@ -66,6 +75,14 @@ public class PessoaService {
      * @param id Identificador da pessoa a ser excluída
      */
     public void excluir(Long id) {
+        if (id == 0) {
+            throw new UserNotFound("Usário não encontrado. ID do usuário não pode ser igual a zero.");
+        }
+
+        if (id < 0) {
+            throw new UserNotFound("Usuário não encontrado. ID do usuário não pode ser negativo.");
+        }
+
         pessoaRepository.deleteById(id);
     }
 
@@ -76,7 +93,7 @@ public class PessoaService {
                 .collect(Collectors.toList());
 
         if (pessoasEncontradasPeloNome.isEmpty()) {
-            throw new RuntimeException("Pessoas com nome de " + pessoaNome + " não foram encontradas.");
+            throw new UserNotFound("Pessoas com nome de " + pessoaNome + " não foram encontradas.");
         }
 
         return pessoasEncontradasPeloNome;
@@ -89,7 +106,7 @@ public class PessoaService {
                 .collect(Collectors.toList());
 
         if (pessoasEncontradasPelaIdade.isEmpty()) {
-            throw new RuntimeException("Pessoas com idades iguais a " + pessoaIdade + " não foram encontradas");
+            throw new UserNotFound("Pessoas com idade iguais a " + pessoaIdade + " não foram encontradas");
         }
 
         return pessoasEncontradasPelaIdade;
@@ -104,7 +121,7 @@ public class PessoaService {
                 .toList();
 
         if (cursosEncontradosPeloNome.isEmpty()) {
-            throw new RuntimeException("Nenhum curso foi encontrado com o nome de " + nome);
+            throw new UserNotFound("Nenhum curso foi encontrado com o nome de " + nome);
         }
 
         return cursosEncontradosPeloNome;
@@ -120,7 +137,7 @@ public class PessoaService {
                 .toList();
 
         if (pessoasEncontradasPorNomeIdadeCurso.isEmpty()) {
-            throw new RuntimeException("Nenhuma pessoa foi encontrada baseado nesses critérios.");
+            throw new UserNotFound("Nenhuma pessoa foi encontrada baseado nesses critérios.");
         }
 
         return pessoasEncontradasPorNomeIdadeCurso;
@@ -130,7 +147,7 @@ public class PessoaService {
         List<Pessoa> total = pessoaRepository.findAll();
 
         if (total.isEmpty()) {
-            throw new RuntimeException("Nenhuma pessoa foi encontrada");
+            throw new UserNotFound("Nenhuma pessoa foi encontrada");
         }
 
         return total.size();
@@ -141,7 +158,7 @@ public class PessoaService {
         List<Pessoa> total = pessoaRepository.findAll();
 
         if (total.isEmpty()) {
-            throw new RuntimeException("Nenhuma pessoa foi encontrada");
+            throw new UserNotFound("Nenhuma pessoa foi encontrada");
         }
 
         for (Pessoa pessoa : total) {
@@ -159,7 +176,7 @@ public class PessoaService {
                 .toList();
 
         if (totalCurso.isEmpty()) {
-            throw new RuntimeException("Nenhuma pessoa foi achada com relação a algum curso.");
+            throw new UserNotFound("Nenhuma pessoa foi achada com relação a algum curso.");
         }
 
         return totalCurso.size();
@@ -172,7 +189,7 @@ public class PessoaService {
                 .toList();
 
         if (relatorioDTOList.isEmpty()) {
-            throw new RuntimeException("Erro em gerar relatório, nenhuma pessoa foi encontrada.");
+            throw new UserNotFound("Erro em gerar relatório, nenhuma pessoa foi encontrada.");
         }
 
         return relatorioDTOList.get(0);

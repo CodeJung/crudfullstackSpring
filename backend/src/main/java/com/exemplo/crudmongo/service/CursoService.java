@@ -2,6 +2,7 @@ package com.exemplo.crudmongo.service;
 
 import com.exemplo.crudmongo.Model.Curso;
 import com.exemplo.crudmongo.Model.Pessoa;
+import com.exemplo.crudmongo.exception.exceptions.CursoNotFound;
 import com.exemplo.crudmongo.repository.CursoRepository;
 
 import org.springframework.data.domain.Page;
@@ -35,7 +36,7 @@ public class CursoService {
             c.setCargaHoraria(curso.getCargaHoraria());
             c.setAtivo(curso.getAtivo());
             return repository.save(c);
-        }).orElseThrow(() -> new RuntimeException("Curso não encontrado."));
+        }).orElseThrow(() -> new CursoNotFound("Curso não encontrado."));
     }
 
     public void excluirCurso(Long id) {
@@ -49,7 +50,7 @@ public class CursoService {
                 .toList();
 
         if (cursosEncontradosPeloNome.isEmpty()) {
-            throw new RuntimeException("Nenhum curso foi encontrado com o nome de " + nome);
+            throw new CursoNotFound("Nenhum curso foi encontrado com o nome de " + nome);
         }
 
         return cursosEncontradosPeloNome;
@@ -62,7 +63,7 @@ public class CursoService {
                 .collect(Collectors.toList());
 
         if (cursosEncontradosPelaCargaHoraria.isEmpty()) {
-            throw new RuntimeException("Nenhum curso foi encontrado com a carga horária de: " + cargaHoraria + "H");
+            throw new CursoNotFound("Nenhum curso foi encontrado com a carga horária de: " + cargaHoraria + "H");
         }
 
         return cursosEncontradosPelaCargaHoraria;
@@ -75,7 +76,7 @@ public class CursoService {
                 .collect(Collectors.toList());
 
         if (cursosEncontradosPorAtivo.isEmpty()) {
-            throw new RuntimeException("Nenhum curso encontrado.");
+            throw new CursoNotFound("Nenhum curso encontrado.");
         }
 
         return cursosEncontradosPorAtivo;
