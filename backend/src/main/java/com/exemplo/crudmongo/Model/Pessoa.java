@@ -13,14 +13,13 @@ import java.util.List;
 
 @Entity  
 @Table(name = "pessoas") 
-public class Pessoa implements UserDetails {
+public class Pessoa  {
 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
     private String nome;
     private int idade;
-    private Role role;
 
     public Pessoa() {
     }
@@ -50,39 +49,5 @@ public class Pessoa implements UserDetails {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public String getUsername() {
-        return "";
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 }
+
