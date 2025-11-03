@@ -2,8 +2,10 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.DTOS.RelatorioDTO;
 import com.exemplo.crudmongo.Model.Pessoa;
+import com.exemplo.crudmongo.exception.exceptions.UserNotFound;
 import com.exemplo.crudmongo.service.PessoaService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,15 +23,12 @@ import java.util.List;
 @CrossOrigin(origins = "*") // Permite requisições de qualquer origem (CORS)
 public class PessoaController {
 
-    private final PessoaService service; // Serviço responsável pela lógica de negócio
+    @Autowired
+    private PessoaService service; // Serviço responsável pela lógica de negócio
 
     /**
      * Injeta o serviço PessoaService via construtor.
      */
-    public PessoaController(PessoaService service) {
-        this.service = service;
-    }
-
     /**
      * Retorna a lista de todas as pessoas cadastradas.
      * Método acessível via GET em /pessoas
